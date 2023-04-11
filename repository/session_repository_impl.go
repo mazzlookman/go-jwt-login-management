@@ -17,7 +17,7 @@ func (r *SessionRepositoryImpl) Save(session domain.Session) domain.Session {
 	return session
 }
 
-func (r *SessionRepositoryImpl) FindByID(sessionID int) domain.Session {
+func (r *SessionRepositoryImpl) FindByID(sessionID string) domain.Session {
 	session := domain.Session{}
 	err := r.db.Find(&session, "id=?", sessionID).Error
 	helper.PanicIfError(err)
@@ -25,7 +25,7 @@ func (r *SessionRepositoryImpl) FindByID(sessionID int) domain.Session {
 	return session
 }
 
-func (r *SessionRepositoryImpl) DeleteByID(sessionID int) {
+func (r *SessionRepositoryImpl) DeleteByID(sessionID string) {
 	err := r.db.Delete(&domain.Session{}, "id=?", sessionID).Error
 	helper.PanicIfError(err)
 }
