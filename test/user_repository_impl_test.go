@@ -14,6 +14,7 @@ func TestCreateUser(t *testing.T) {
 
 	user := domain.User{
 		Name:     "Pram",
+		Email:    "pram@test.com",
 		Password: "123",
 	}
 	save := userRepository.Save(user)
@@ -42,4 +43,9 @@ func TestDeleteByIDUser(t *testing.T) {
 	assert.Equal(t, 0, user.ID)
 	assert.Equal(t, "", user.Name)
 	assert.Equal(t, "", user.Password)
+}
+
+func TestFindByEmail(t *testing.T) {
+	user := userRepository.FindByEmail("pram@test.com")
+	assert.Equal(t, 1, user.ID)
 }

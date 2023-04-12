@@ -10,6 +10,14 @@ type UserRepositoryImpl struct {
 	db *gorm.DB
 }
 
+func (r *UserRepositoryImpl) FindByEmail(email string) domain.User {
+	user := domain.User{}
+	err := r.db.Find(&user, "email=?", email).Error
+	helper.PanicIfError(err)
+
+	return user
+}
+
 func (r *UserRepositoryImpl) Save(user domain.User) domain.User {
 	err := r.db.Create(&user).Error
 	helper.PanicIfError(err)

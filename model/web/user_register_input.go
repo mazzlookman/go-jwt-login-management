@@ -1,7 +1,6 @@
-package domain
+package web
 
-type User struct {
-	ID       int
+type UserRegisterInput struct {
 	Name     string
 	Email    string
 	Password string
