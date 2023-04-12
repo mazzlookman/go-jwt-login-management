@@ -14,8 +14,8 @@ var userService = service.NewUserService(repository.NewUserRepository(app.DBConn
 
 func TestRegister(t *testing.T) {
 	input := web.UserRegisterInput{
-		Name:     "Mario",
-		Email:    "mario@test.com",
+		Name:     "Ucup",
+		Email:    "ucup@test.com",
 		Password: "123",
 	}
 
@@ -24,7 +24,7 @@ func TestRegister(t *testing.T) {
 		fmt.Println(err.Error())
 	}
 
-	assert.Equal(t, "mario@test.com", user.Email)
+	assert.Equal(t, "ucup@test.com", user.Email)
 	fmt.Println(user)
 }
 

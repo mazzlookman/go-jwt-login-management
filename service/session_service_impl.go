@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var cookie_name = "I-BELL-A"
+var cookie_name = "i-bell-a"
 
 type SessionServiceImpl struct {
 	repository.UserRepository
@@ -45,12 +45,17 @@ func (s *SessionServiceImpl) CurrentUser(r *http.Request) domain.User {
 	return user
 }
 
-func (s *SessionServiceImpl) Destroy(r *http.Request) {
+func (s *SessionServiceImpl) Destroy(w http.ResponseWriter, r *http.Request) {
 	c, err := r.Cookie(cookie_name)
-	if err != nil {
-		panic(err.Error())
-	}
-	c.Value = "none"
+	helper.PanicIfError(err)
+	s.SessionRepository.DeleteByID(c.Value)
+
 	c.Expires = time.Unix(0, 0)
 	c.MaxAge = -1
+
+	http.SetCookie(w, c)
+}
+
+func NewSessionService(userRepository repository.UserRepository, sessionRepository repository.SessionRepository) SessionService {
+	return &SessionServiceImpl{UserRepository: userRepository, SessionRepository: sessionRepository}
 }
