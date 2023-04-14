@@ -18,8 +18,8 @@ type UserControllerImpl struct {
 
 func (c *UserControllerImpl) Logout(ctx *gin.Context) {
 	c.SessionService.Destroy(ctx.Writer, ctx.Request)
-	currentUser := c.SessionService.CurrentUser(ctx.Request)
-	ctx.HTML(200, "home.gohtml", currentUser)
+	//currentUser := c.SessionService.CurrentUser(ctx.Request)
+	ctx.Redirect(302, "/")
 }
 
 func (c *UserControllerImpl) Register(ctx *gin.Context) {
