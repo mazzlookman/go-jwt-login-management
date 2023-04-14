@@ -25,6 +25,7 @@ func (s *UserServiceImpl) Register(input web.UserRegisterInput) (domain.User, er
 	user.Password = string(bytes)
 
 	save := s.UserRepository.Save(user)
+
 	return save, nil
 }
 

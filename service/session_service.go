@@ -6,7 +6,7 @@ import (
 )
 
 type SessionService interface {
-	Create(w http.ResponseWriter, userID int) domain.Session
+	Create(w http.ResponseWriter, token string, userID int) domain.Session
 	CurrentUser(r *http.Request) domain.User
 	Destroy(w http.ResponseWriter, r *http.Request)
 }

@@ -2,6 +2,8 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"login-management-go/auth"
 	"login-management-go/helper"
 	"login-management-go/model/web"
 	"login-management-go/service"
@@ -11,6 +13,7 @@ import (
 type UserControllerImpl struct {
 	service.UserService
 	service.SessionService
+	auth.JWTAuth
 }
 
 func (c *UserControllerImpl) Logout(ctx *gin.Context) {
@@ -28,10 +31,18 @@ func (c *UserControllerImpl) PostRegister(ctx *gin.Context) {
 	err := ctx.ShouldBind(&input)
 	helper.PanicIfError(err)
 
-	_, err = c.UserService.Register(input)
+	user, err := c.UserService.Register(input)
 	helper.PanicIfError(err)
 
-	ctx.Redirect(http.StatusFound, "/users/login")
+	//generate JWT
+	token, err := c.JWTAuth.GenerateToken(web.JWTClaims{
+		SID: uuid.New().String(),
+	})
+
+	//create session
+	c.SessionService.Create(ctx.Writer, token, user.ID)
+
+	ctx.Redirect(http.StatusFound, "/")
 }
 
 func (c *UserControllerImpl) Login(ctx *gin.Context) {
@@ -46,11 +57,17 @@ func (c *UserControllerImpl) PostLogin(ctx *gin.Context) {
 	user, err := c.UserService.Login(input)
 	helper.PanicIfError(err)
 
-	c.SessionService.Create(ctx.Writer, user.ID)
+	//generate JWT
+	token, err := c.JWTAuth.GenerateToken(web.JWTClaims{
+		SID: uuid.New().String(),
+	})
+
+	//create session
+	c.SessionService.Create(ctx.Writer, token, user.ID)
 
 	ctx.Redirect(http.StatusFound, "/")
 }
 
-func NewUserController(userService service.UserService, sessionService service.SessionService) UserController {
-	return &UserControllerImpl{UserService: userService, SessionService: sessionService}
+func NewUserController(userService service.UserService, sessionService service.SessionService, jwtAuth auth.JWTAuth) UserController {
+	return &UserControllerImpl{UserService: userService, SessionService: sessionService, JWTAuth: jwtAuth}
 }

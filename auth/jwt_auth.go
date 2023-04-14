@@ -3,12 +3,13 @@ package auth
 import (
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
+	"login-management-go/model/web"
 )
 
 var SECRET_KEY = []byte("inikeyyangsangatsupersyekali")
 
 type JWTAuth interface {
-	GenerateToken(sessionID string, userID int) (string, error)
+	GenerateToken(payload web.JWTClaims) (string, error)
 	ValidateToken(token string) (*jwt.Token, error)
 }
 
@@ -19,10 +20,9 @@ func NewJWTAuth() JWTAuth {
 	return &JWTAuthImpl{}
 }
 
-func (j *JWTAuthImpl) GenerateToken(sessionID string, userID int) (string, error) {
+func (j *JWTAuthImpl) GenerateToken(payload web.JWTClaims) (string, error) {
 	claims := jwt.MapClaims{}
-	claims["s_id"] = sessionID
-	claims["user_id"] = userID
+	claims["s_id"] = payload.SID
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 

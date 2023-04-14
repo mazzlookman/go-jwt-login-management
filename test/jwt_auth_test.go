@@ -6,13 +6,16 @@ import (
 	"github.com/stretchr/testify/assert"
 	"log"
 	authJwt "login-management-go/auth"
+	"login-management-go/model/web"
 	"testing"
 )
 
 var auth = authJwt.NewJWTAuth()
 
 func TestGenerateToken(t *testing.T) {
-	token, err := auth.GenerateToken(uuid.New().String(), 1)
+	token, err := auth.GenerateToken(web.JWTClaims{
+		SID: uuid.New().String(),
+	})
 	if err != nil {
 		log.Println(err)
 	}
@@ -21,7 +24,9 @@ func TestGenerateToken(t *testing.T) {
 }
 
 func TestValidateToken(t *testing.T) {
-	token, err := auth.GenerateToken(uuid.New().String(), 1)
+	token, err := auth.GenerateToken(web.JWTClaims{
+		SID: uuid.New().String(),
+	})
 	if err != nil {
 		log.Println(err)
 	}
