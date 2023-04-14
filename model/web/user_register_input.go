@@ -1,7 +1,7 @@
 package web
 
 type UserRegisterInput struct {
-	Name     string
-	Email    string
-	Password string
+	Name     string `form:"name"`
+	Email    string `form:"email"`
+	Password string `form:"password"`
 }

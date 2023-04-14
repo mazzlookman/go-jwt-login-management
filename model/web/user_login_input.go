@@ -1,6 +1,6 @@
 package web
 
 type UserLoginInput struct {
-	Email    string
-	Password string
+	Email    string `form:"email"`
+	Password string `form:"password"`
 }
